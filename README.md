@@ -1,72 +1,45 @@
-🛡️ DevShield AI: Agentic Code Gatekeeper
-DevShield is an AI-powered code auditing, repair, and verification pipeline built with Python, Streamlit, and the Google Gemini API.
-Unlike standard single-prompt LLM wrappers that output unverified code, DevShield implements an agentic, test-driven self-healing loop. It automatically parses candidate functions, executes flake8 static analysis, generates dynamic ⁠pytest⁠ suites for edge cases, and runs code in an isolated sandbox. If tests fail, DevShield captures the exact execution trace and iteratively patches the function until all edge cases pass.
-⚡ Key Features
- Static Code Analysis: Integrates ⁠flake8⁠ to flag syntax issues, unused imports, and style violations prior to test execution.
- Dynamic Pytest Synthesis: Leverages Gemini to automatically engineer targeted ⁠pytest⁠ test suites—covering zero-division, missing dictionary keys, empty inputs, type mismatches, and mock payloads.
- Isolated Sandbox Execution: Runs generated tests in temporary, isolated execution environments with strict process timeouts (preventing infinite loops and memory leaks).
- Iterative Self-Healing Loop: Feeds raw sandbox failure logs and tracebacks back to the agent to dynamically patch code until 100% of test cases pass.
- Streamlit Visual Dashboard: Displays real-time step-by-step execution traces, sandbox logs, execution speed metrics, and side-by-side code diffs.
- Fail-Safe Fallbacks: Robust model fallback handling across Gemini API endpoints to ensure maximum uptime and sub-second verification.
- 🏗️ System Architecture & Workflow
- ┌───────────────────────────────┐
-               │       User Input Code         │
-               └───────────────┬───────────────┘
-                               │
-                               ▼
-               ┌───────────────────────────────┐
-               │   1. Static Analysis (flake8) │
-               └───────────────┬───────────────┘
-                               │
-                               ▼
-               ┌───────────────────────────────┐
-               │ 2. Dynamic Pytest Synthesis   │
-               └───────────────┬───────────────┘
-                               │
-                               ▼
-    ┌────────► ┌───────────────────────────────┐
-    │          │ 3. Isolated Sandbox Execution │
-    │          │           (pytest)            │
-    │          └───────────────┬───────────────┘
-    │                          │
-    │                   Passed or Failed?
-    │                   /             \
-  FAILED               /               \  PASSED
-    │                 ▼                 ▼
-┌───┴───────────────┐          ┌───────────────────┐
-│ 4. Auto-Repair    │          │  Verified Final   │
-│ Feedback Loop     │          │      Code 🎉      │
-└───────────────────┘          └───────────────────┘
-🛠️ Tech Stack
- Language: Python 3.10+
- Frontend Dashboard: Streamlit
- LLM Engine: Google Gemini API (⁠gemini-1.5-flash⁠, ⁠gemini-1.5-pro⁠)
- Static Analysis: ⁠flake8⁠
- Dynamic Testing Framework: ⁠pytest⁠
- Environment & Config: ⁠python-dotenv⁠, ⁠requests⁠
-🎯 Scope & Verification Boundaries
-DevShield is designed for standalone Python functions, algorithmic modules, and data transformation utilities.
- ✅ Supported: Pure functions, data parsing (JSON/Dicts), mathematical logic, string formatting, sensor telemetry pipelines, and standard library operations.
- ⚠️ Out of Scope (By Design): GUI apps (Tkinter/PyQt), hardware I/O (Raspberry Pi GPIO), active database network calls, and multi-file internal package imports.
-🚀 Reproduction Guide (Setup & Execution)
-1. Prerequisites
- Python 3.10+ installed
- A valid Google Gemini API Key
-2. Installation
-Clone the repository and install dependencies:
-git clone https://github.com/Maxi354/micro1-hackathon.git
+1.# DevShield AI: Agentic Code Gatekeeper
+
+DevShield AI is an automated code auditing, test generation, and self-correcting feedback loop system powered by Python and Google's Gemini models. It provides deep static analysis (via flake8), automated unit test generation (via pytest), and agentic sandboxed runtime validation to keep your codebase secure and robust.
+
+---
+
+## Features
+
+- **Automated Code Auditing:** Scans submitted Python code for style, syntax, and logic issues.
+- **Agentic Pipeline (`agent.py`):** Core orchestration handling iterative test generation, execution, and feedback loops.
+- **Interactive Live Dashboard (`app.py`):** A clean Streamlit interface allowing developers to run both baseline single-prompt fixes and full multi-step agentic workflows.
+
+---
+
+## Reproduction Guide
+
+Follow these steps to run DevShield AI locally from a clean environment:
+
+### 1. Clone the Repository
+```bash
+git clone [https://github.com/Maxi354/micro1-hackathon.git](https://github.com/Maxi354/micro1-hackathon.git)
 cd micro1-hackathon
+
+2. Create and Activate a Virtual Environment
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+3. Install Dependencies
 pip install -r requirements.txt
-3. Environment Configuration
-Create a ⁠.env⁠ file in the root directory:
-GEMINI_API_KEY=your_gemini_api_key_here
-4. Application Execution
-Launch the Streamlit interface:
+
+4. Configure Environment Variables
+Create a ⁠.env⁠ file in the root directory and add your Google Gemini API key:
+GOOGLE_API_KEY=your_actual_api_key_here
+(Note: If deploying to Streamlit Community Cloud, add this key under your app's Secrets settings instead).
+
+5. Run the Application
 streamlit run app.py
-📂 Project Structure
-.
-├── agent.py          # Core agentic pipeline (flake8, pytest generator, sandbox runner)
-├── app.py            # Streamlit dashboard & live trace visualizer
-├── requirements.txt  # Project dependencies
-├── .env              # Environment configuration (API keys)
-└── README.md         # Project documentation
+
+Improvement Changelog
+ Initial Implementation: Built the core agentic pipeline (⁠agent.py⁠) integrating static analysis checks and automated test generation scripts.
+ UI Streamlining: Developed a responsive Streamlit dashboard (⁠app.py⁠) with side-by-side execution options for baseline single-prompt fixes versus full agentic workflows.
+ Robust Security & Deployment: Configured ignore rules and environment handling to protect credentials while ensuring seamless cloud deployment.
