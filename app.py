@@ -1,3 +1,10 @@
+import os
+import streamlit as st
+
+if "GEMINI_API_KEY" in st.secrets:
+    os.environ["GEMINI_API_KEY"] = st.secrets["GEMINI_API_KEY"]
+if "GOOGLE_API_KEY" in st.secrets:
+    os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
 import streamlit as st
 from agent import run_baseline_fix, run_devshield_agent
 
