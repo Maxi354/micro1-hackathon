@@ -1,22 +1,22 @@
-1.# DevShield AI: Agentic Code Gatekeeper
+1.DevShield AI: Agentic Code Gatekeeper
 
 DevShield AI is an automated code auditing, test generation, and self-correcting feedback loop system powered by Python and Google's Gemini models. It provides deep static analysis (via flake8), automated unit test generation (via pytest), and agentic sandboxed runtime validation to keep your codebase secure and robust.
 
 ---
 
-## Features
+ Features
 
-- **Automated Code Auditing:** Scans submitted Python code for style, syntax, and logic issues.
-- **Agentic Pipeline (`agent.py`):** Core orchestration handling iterative test generation, execution, and feedback loops.
-- **Interactive Live Dashboard (`app.py`):** A clean Streamlit interface allowing developers to run both baseline single-prompt fixes and full multi-step agentic workflows.
+- Automated Code Auditing:** Scans submitted Python code for style, syntax, and logic issues.
+- Agentic Pipeline (`agent.py`):** Core orchestration handling iterative test generation, execution, and feedback loops.
+- Interactive Live Dashboard (`app.py`):** A clean Streamlit interface allowing developers to run both baseline single-prompt fixes and full multi-step agentic workflows.
 
 ---
 
-## Reproduction Guide
+Reproduction Guide
 
 Follow these steps to run DevShield AI locally from a clean environment:
 
-### 1. Clone the Repository
+ 1. Clone the Repository
 ```bash
 git clone [https://github.com/Maxi354/micro1-hackathon.git](https://github.com/Maxi354/micro1-hackathon.git)
 cd micro1-hackathon
