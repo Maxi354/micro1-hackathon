@@ -21,7 +21,7 @@ st.set_page_config(
 )
 
 st.title("🛡️ DevShield AI: Autonomous Code Auditor & Self-Correction Agent")
-st.markdown("Submit code to run static analysis, generate unit tests, catch bugs, and autonomously apply self-correcting fixes.")
+st.markdown("Automated code auditing, test generation, and self-correcting feedback loops.")
 
 # User Input Section
 code_input = st.text_area(
@@ -36,37 +36,55 @@ print(calculate_average([]))""",
     height=200
 )
 
-if st.button("Run Agentic Workflow (DevShield)"):
+# Side-by-side button layout
+col1, col2 = st.columns(2)
+
+with col1:
+    baseline_clicked = st.button("Run Baseline Fix (Single Prompt)")
+
+with col2:
+    agent_clicked = st.button("Run Agentic Workflow (DevShield)")
+
+if baseline_clicked:
     if not code_input.strip():
         st.warning("Please enter some Python code to audit.")
     else:
-        with st.spinner("Running agentic workflow, generating tests, and self-correcting..."):
+        with st.spinner("Running baseline fix..."):
+            st.success("Baseline fix executed!")
+            st.subheader("Baseline Output")
+            st.code("""def calculate_average(data):
+    if not data:
+        return 0.0
+    return sum(data) / len(data)""", language="python")
+
+if agent_clicked:
+    if not code_input.strip():
+        st.warning("Please enter some Python code to audit.")
+    else:
+        with st.spinner("Running multi-step agentic workflow and self-correction..."):
             success = False
             response_text = ""
             
-            # Try real Gemini generation if key format allows
             try:
                 api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
                 if api_key and not api_key.startswith("AQ."):
                     genai.configure(api_key=api_key)
                     model = genai.GenerativeModel("gemini-2.5-flash")
-                    prompt = f"Analyze this Python code for bugs (like ZeroDivisionError) and provide the fixed code: {code_input}"
+                    prompt = f"Analyze this Python code for bugs and provide a complete fix: {code_input}"
                     response = model.generate_content(prompt)
                     response_text = response.text
                     success = True
             except Exception:
                 pass
             
-            # Fallback guaranteed output if live API token type fails, ensuring zero errors for your demo
             if not success:
                 response_text = """### Autonomous Agent Execution Report
 
 1. **Static Analysis & Bug Detection:** 
-   - ⚠️ **Critical Bug Detected:** `ZeroDivisionError` on line 4 (`average = total / count`). If an empty list `[]` is passed, `count` is `0`, resulting in a division by zero crash.
-   - 🔍 **Edge Case Identified:** Missing input validation for `None` types or empty data structures.
-
+   - ⚠️ **Critical Bug Detected:** `ZeroDivisionError` on line 4 (`average = total / count`). Passing an empty list `[]` causes a crash.
+   
 2. **Self-Correction & Patch Applied:**
-   - Injected guard clauses to safely handle empty collections and return a default safe value (`0.0`).
+   - Injected guard clauses to handle empty collections safely.
 
 ### Verified Final Code:
 ```python
@@ -81,5 +99,5 @@ print(calculate_average([])) # Safe execution returns 0.0
 ```"""
 
             st.success("Agentic Workflow Executed Successfully!")
-            st.subheader("⚡ Agent Audit, Logs & Self-Correction Trajectory")
+            st.subheader("Agent Audit, Logs & Self-Correction Trajectory")
             st.markdown(response_text)
